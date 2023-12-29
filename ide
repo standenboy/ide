@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if [ -z $1 ]; then 
+	sleep 0
+else
+	cd $1
+fi
+
+while true; do
+	mkdir /tmp/ide
+	touch /tmp/ide/New /tmp/ide/Mkdir /tmp/ide/Quit /tmp/ide/Shell
+
+	for i in $(ls -a); do touch /tmp/ide/$i; done
+
+	input=$(ls -a -1 /tmp/ide | fzf --reverse) 
+
+	rm -rf /tmp/ide
+
+	if [ "$input" = "New" ]; then
+		echo -n "file name: "
+		read dir
+		touch $dir
+	elif [ "$input" = "Mkdir" ]; then
+		echo -n "dir name: "
+		read dir
+		mkdir $dir
+	elif [ "$input" = "Quit" ]; then
+		break
+	elif [ "$input" = "Shell" ]; then
+		bash
+	elif [ -z "$input" ]; then
+		sleep 0
+	else
+		vim $input
+	fi
+done
